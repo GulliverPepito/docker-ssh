@@ -18,7 +18,11 @@ if ! grep ${SSH_USER} /etc/passwd ; then
 
 	# Copy the authorized_keys
 	touch /home/${SSH_USER}/.ssh/authorized_keys
-	echo "$SSH_KEY" >> /home/${SSH_USER}/.ssh/authorized_keys
+	IFS=',' read -a keys <<< "${SSH_KEY}"
+    	for key in "${keys[@]}"
+    	do
+		echo "$key" >> /home/${SSH_USER}/.ssh/authorized_keys
+    	done
 	chmod 600 /home/${SSH_USER}/.ssh/authorized_keys
 	
 	# Change the owner of the ssh folder
